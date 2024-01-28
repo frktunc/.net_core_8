@@ -21,15 +21,16 @@ namespace api.Repository
 
         public async Task<Stock> CreateAsync(Stock stockModel)
         {
-           await _contex.Stocks.AddAsync(stockModel);
-           await _contex.SaveChangesAsync();
-           return stockModel;
+            await _contex.Stocks.AddAsync(stockModel);
+            await _contex.SaveChangesAsync();
+            return stockModel;
         }
 
         public async Task<Stock?> DeleteAsync(int id)
         {
             var stockModel = await _contex.Stocks.FirstOrDefaultAsync(x => x.Id == id);
-            if(stockModel == null){
+            if (stockModel == null)
+            {
                 return null;
             }
             _contex.Stocks.Remove(stockModel);
@@ -37,15 +38,16 @@ namespace api.Repository
             return stockModel;
         }
 
-        public async Task<List<Stock>> GetAllAsync() 
+        public async Task<List<Stock>> GetAllAsync()
         {
-            return await _contex.Stocks.ToListAsync();
+            return await _contex.Stocks.Include(c => c.Comments).ToListAsync();
         }
 
         public async Task<Stock?> GetByIdAsync(int id)
         {
-            return await _contex.Stocks.FindAsync(id);
+            return await _contex.Stocks.Include(s => s.Comments).FirstOrDefaultAsync(i => i.Id == id);
         }
+
 
         public Task<bool> StockExists(int id)
         {
@@ -56,10 +58,11 @@ namespace api.Repository
         {
             var existingStock = await _contex.Stocks.FirstOrDefaultAsync(x => x.Id == id);
 
-            if(existingStock == null){
+            if (existingStock == null)
+            {
                 return null;
             }
-        
+
             existingStock.Symbol = stockDto.Symbol;
             existingStock.MarketCup = stockDto.MarketCup;
             existingStock.Purchase = stockDto.Purchase;

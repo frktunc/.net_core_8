@@ -18,6 +18,7 @@ namespace api.Mappers
                 LastDiv = stockModel.LastDiv,
                 Industry = stockModel.Industry,
                 MarketCup =  stockModel.MarketCup,
+                 Comments = stockModel.Comments.Select(c => c.ToCommentDto()).ToList()
             };
         }
         public static Stock ToStockFromCreateDto(this CreateStockRequestDto stockDto) {
@@ -28,6 +29,7 @@ namespace api.Mappers
                 LastDiv = stockDto.LastDiv,
                 Industry = stockDto.Industry,
                 MarketCup = stockDto.MarketCup,
+               
             };
         }
     }
